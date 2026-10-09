@@ -1,0 +1,85 @@
+services:
+  php:
+    container_name: owner_php
+    build:
+      context: .
+      target: app_php
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "php", "-v"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    volumes:
+      - php_socket:/var/run/php
+      - storage_data:/srv/app/var/storage
+    environment:
+      APP_ENV: ${APP_ENV:-dev}
+      APP_SECRET: ${APP_SECRET:-change-me-in-local-only}
+      DATABASE_URL: ${DATABASE_URL}
+      MESSENGER_TRANSPORT_DSN: ${MESSENGER_TRANSPORT_DSN}
+      MAILER_DSN: ${MAILER_DSN}
+    depends_on:
+      database:
+        condition: service_healthy
+
+  worker:
+    container_name: owner_worker
+    build:
+      context: .
+      target: app_php
+    restart: unless-stopped
+    command: php bin/console messenger:consume async --time-limit=3600 -vv
+    volumes:
+      - storage_data:/srv/app/var/storage
+    environment:
+      APP_ENV: ${APP_ENV:-dev}
+      APP_SECRET: ${APP_SECRET:-change-me-in-local-only}
+      DATABASE_URL: ${DATABASE_URL}
+      MESSENGER_TRANSPORT_DSN: ${MESSENGER_TRANSPORT_DSN}
+      MAILER_DSN: ${MAILER_DSN}
+    depends_on:
+      database:
+        condition: service_healthy
+
+  caddy:
+    container_name: owner_caddy
+    build:
+      context: .
+      target: app_caddy
+    restart: unless-stopped
+    depends_on: [php]
+    environment:
+      SERVER_NAME: ${SERVER_NAME:-localhost, caddy:80}
+    ports:
+      - "${HTTP_PORT:-8080}:80"
+      - "${HTTPS_PORT:-8443}:443"
+      - "${HTTPS_PORT:-8443}:443/udp"
+    volumes:
+      - php_socket:/var/run/php
+      - caddy_data:/data
+      - caddy_config:/config
+      - storage_data:/srv/app/var/storage:ro
+
+  database:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-owner}
+      POSTGRES_USER: ${POSTGRES_USER:-owner}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-owner}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-owner}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  php_socket:
+  caddy_data:
+  caddy_config:
+  db_data:
+  storage_data:

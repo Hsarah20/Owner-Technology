@@ -1,0 +1,18 @@
+{
+    servers {
+        metrics
+    }
+}
+
+{$SERVER_NAME:localhost} {
+    root * /srv/app/public
+    encode zstd gzip
+
+    php_fastcgi php:9000
+    file_server
+
+    log {
+        output stdout
+        format console
+    }
+}

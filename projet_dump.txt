@@ -1,0 +1,279 @@
+===== ARBORESCENCE =====
+./docker/caddy/Caddyfile
+./docker-compose.override.yml
+./docker-compose.prod.yml
+./docker-compose.yml
+./Dockerfile
+./.dockerignore
+./docker/php/conf.d/app.dev.ini
+./docker/php/conf.d/app.ini
+./docker/php/conf.d/app.prod.ini
+./docker/php/docker-entrypoint.sh
+./docker/php/php-fpm.d/zz-docker.conf
+./.env
+./.gitignore
+./projet_dump.txt
+./README.md
+./tmp-symfony/composer.json
+./tmp-symfony/composer.lock
+./tmp-symfony/vendor/autoload.php
+./tmp-symfony/vendor/composer/autoload_classmap.php
+./tmp-symfony/vendor/composer/autoload_namespaces.php
+./tmp-symfony/vendor/composer/autoload_psr4.php
+./tmp-symfony/vendor/composer/autoload_real.php
+./tmp-symfony/vendor/composer/autoload_static.php
+./tmp-symfony/vendor/composer/ClassLoader.php
+./tmp-symfony/vendor/composer/installed.json
+./tmp-symfony/vendor/composer/installed.php
+./tmp-symfony/vendor/composer/InstalledVersions.php
+./tmp-symfony/vendor/composer/LICENSE
+./tmp-symfony/vendor/composer/platform_check.php
+./tmp-symfony/vendor/symfony/flex/composer.json
+./tmp-symfony/vendor/symfony/flex/LICENSE
+./tmp-symfony/vendor/symfony/flex/README.md
+./tmp-symfony/vendor/symfony/flex/src/Command/DumpEnvCommand.php
+./tmp-symfony/vendor/symfony/flex/src/Command/InstallRecipesCommand.php
+./tmp-symfony/vendor/symfony/flex/src/Command/RecipesCommand.php
+./tmp-symfony/vendor/symfony/flex/src/Command/UpdateRecipesCommand.php
+./tmp-symfony/vendor/symfony/flex/src/Configurator/AbstractConfigurator.php
+./tmp-symfony/vendor/symfony/flex/src/Configurator/AddLinesConfigurator.php
+./tmp-symfony/vendor/symfony/flex/src/Configurator/BundlesConfigurator.php
+./tmp-symfony/vendor/symfony/flex/src/Configurator/ComposerCommandsConfigurator.php
+./tmp-symfony/vendor/symfony/flex/src/Configurator/ComposerScriptsConfigurator.php
+./tmp-symfony/vendor/symfony/flex/src/Configurator/ContainerConfigurator.php
+./tmp-symfony/vendor/symfony/flex/src/Configurator/CopyFromPackageConfigurator.php
+./tmp-symfony/vendor/symfony/flex/src/Configurator/CopyFromRecipeConfigurator.php
+./tmp-symfony/vendor/symfony/flex/src/Configurator/DockerComposeConfigurator.php
+./tmp-symfony/vendor/symfony/flex/src/Configurator/DockerfileConfigurator.php
+./tmp-symfony/vendor/symfony/flex/src/Configurator/DotenvConfigurator.php
+./tmp-symfony/vendor/symfony/flex/src/Configurator/EnvConfigurator.php
+./tmp-symfony/vendor/symfony/flex/src/Configurator/GitignoreConfigurator.php
+./tmp-symfony/vendor/symfony/flex/src/Configurator/MakefileConfigurator.php
+./tmp-symfony/vendor/symfony/flex/src/Configurator.php
+./tmp-symfony/vendor/symfony/flex/src/Downloader.php
+./tmp-symfony/vendor/symfony/flex/src/Event/UpdateEvent.php
+./tmp-symfony/vendor/symfony/flex/src/Flex.php
+./tmp-symfony/vendor/symfony/flex/src/GithubApi.php
+./tmp-symfony/vendor/symfony/flex/src/InformationOperation.php
+./tmp-symfony/vendor/symfony/flex/src/Lock.php
+./tmp-symfony/vendor/symfony/flex/src/Options.php
+./tmp-symfony/vendor/symfony/flex/src/PackageFilter.php
+./tmp-symfony/vendor/symfony/flex/src/PackageJsonSynchronizer.php
+./tmp-symfony/vendor/symfony/flex/src/PackageResolver.php
+./tmp-symfony/vendor/symfony/flex/src/Path.php
+./tmp-symfony/vendor/symfony/flex/src/Recipe.php
+./tmp-symfony/vendor/symfony/flex/src/Response.php
+./tmp-symfony/vendor/symfony/flex/src/ScriptExecutor.php
+./tmp-symfony/vendor/symfony/flex/src/SymfonyBundle.php
+./tmp-symfony/vendor/symfony/flex/src/SymfonyPackInstaller.php
+./tmp-symfony/vendor/symfony/flex/src/Unpacker.php
+./tmp-symfony/vendor/symfony/flex/src/Unpack/Operation.php
+./tmp-symfony/vendor/symfony/flex/src/Unpack/Result.php
+./tmp-symfony/vendor/symfony/flex/src/Update/DiffHelper.php
+./tmp-symfony/vendor/symfony/flex/src/Update/RecipePatcher.php
+./tmp-symfony/vendor/symfony/flex/src/Update/RecipePatch.php
+./tmp-symfony/vendor/symfony/flex/src/Update/RecipeUpdate.php
+
+===== FICHIERS CLÉS =====
+
+----- .env -----
+###> symfony/framework-bundle ###
+APP_ENV=dev
+APP_SECRET=change-me-in-local-only
+###< symfony/framework-bundle ###
+
+###> doctrine/doctrine-bundle ###
+DATABASE_URL="postgresql://owner:owner@database:5432/owner?serverVersion=16&charset=utf8"
+POSTGRES_DB=owner
+POSTGRES_USER=owner
+POSTGRES_PASSWORD=owner
+POSTGRES_PORT=5433
+###< doctrine/doctrine-bundle ###
+
+###> symfony/messenger ###
+MESSENGER_TRANSPORT_DSN=doctrine://default?auto_setup=1
+###< symfony/messenger ###
+
+###> symfony/mailer ###
+MAILER_DSN=smtp://mailer:1025
+###< symfony/mailer ###
+
+###> docker ###
+SERVER_NAME=localhost
+HTTP_PORT=8080
+HTTPS_PORT=8443
+###< docker ###
+----- docker-compose.yml -----
+services:
+  php:
+    container_name: owner_php
+    build:
+      context: .
+      target: app_php
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "php", "-v"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    volumes:
+      - php_socket:/var/run/php
+      - storage_data:/srv/app/var/storage
+    environment:
+      APP_ENV: prod
+      APP_SECRET: ${APP_SECRET}
+      DATABASE_URL: ${DATABASE_URL}
+      MESSENGER_TRANSPORT_DSN: ${MESSENGER_TRANSPORT_DSN}
+      MAILER_DSN: ${MAILER_DSN}
+    depends_on:
+      database:
+        condition: service_healthy
+    networks: [owner]
+
+  worker:
+    container_name: owner_worker
+    build:
+      context: .
+      target: app_php
+    restart: unless-stopped
+    command: php bin/console messenger:consume async --time-limit=3600 -vv
+    volumes:
+      - storage_data:/srv/app/var/storage
+    environment:
+      APP_ENV: prod
+      APP_SECRET: ${APP_SECRET}
+      DATABASE_URL: ${DATABASE_URL}
+      MESSENGER_TRANSPORT_DSN: ${MESSENGER_TRANSPORT_DSN}
+      MAILER_DSN: ${MAILER_DSN}
+    depends_on:
+      database:
+        condition: service_healthy
+    networks: [owner]
+
+  caddy:
+    container_name: owner_caddy
+    build:
+      context: .
+      target: app_caddy
+    restart: unless-stopped
+    depends_on: [php]
+    environment:
+      SERVER_NAME: ${SERVER_NAME:-localhost, caddy:80}
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+      - "${HTTPS_PORT:-443}:443/udp"
+    volumes:
+      - php_socket:/var/run/php
+      - caddy_data:/data
+      - caddy_config:/config
+      - storage_data:/srv/app/var/storage:ro
+    networks: [owner]
+
+  database:
+    container_name: owner_db
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-owner}
+      POSTGRES_USER: ${POSTGRES_USER:-owner}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-owner}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-owner}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks: [owner]
+
+volumes:
+  php_socket:
+  caddy_data:
+  caddy_config:
+  db_data:
+  storage_data:
+
+networks:
+  owner:
+    driver: bridge
+----- Dockerfile -----
+#syntax=docker/dockerfile:1.4
+
+ARG PHP_VERSION=8.3
+ARG CADDY_VERSION=2.8
+
+# ==========================================================
+# Stage PHP-FPM (base prod)
+# ==========================================================
+FROM php:${PHP_VERSION}-fpm-alpine AS app_php
+
+ENV APP_ENV=prod
+
+WORKDIR /srv/app
+
+RUN apk add --no-cache \
+        acl file gettext git make bash fcgi \
+        icu-dev libzip-dev postgresql-dev oniguruma-dev linux-headers $PHPIZE_DEPS \
+    && docker-php-ext-install -j$(nproc) intl zip pdo pdo_pgsql opcache \
+    && pecl install apcu && docker-php-ext-enable apcu \
+    && apk del $PHPIZE_DEPS \
+    && rm -rf /var/cache/apk/*
+
+COPY --from=composer/composer:2-bin /composer /usr/bin/composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+COPY docker/php/conf.d/app.ini $PHP_INI_DIR/conf.d/
+COPY docker/php/conf.d/app.prod.ini $PHP_INI_DIR/conf.d/
+COPY docker/php/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
+RUN mkdir -p /var/run/php
+
+COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+RUN chmod +x /usr/local/bin/docker-entrypoint
+
+COPY composer.json composer.lock symfony.lock ./
+RUN composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress \
+    && composer clear-cache
+
+COPY . .
+RUN rm -rf docker/ \
+    && mkdir -p var/cache var/log var/storage \
+    && composer dump-autoload --classmap-authoritative --no-dev \
+    && composer dump-env prod \
+    && php bin/console cache:warmup \
+    && chmod +x bin/console
+
+ENTRYPOINT ["docker-entrypoint"]
+CMD ["php-fpm"]
+
+# ==========================================================
+# Stage DEV
+# ==========================================================
+FROM app_php AS app_php_dev
+
+ENV APP_ENV=dev XDEBUG_MODE=off
+
+RUN rm $PHP_INI_DIR/conf.d/app.prod.ini \
+    && mv "$PHP_INI_DIR/php.ini" "$PHP_INI_DIR/php.ini-production" \
+    && mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" \
+    && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS linux-headers \
+    && pecl install xdebug && docker-php-ext-enable xdebug \
+    && apk del .build-deps \
+    && rm -f .env.local.php
+
+COPY docker/php/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
+
+# ==========================================================
+# Stage Caddy (sans Mercure/Vulcain)
+# ==========================================================
+FROM caddy:${CADDY_VERSION}-alpine AS app_caddy
+
+WORKDIR /srv/app
+
+COPY docker/caddy/Caddyfile /etc/caddy/Caddyfile
+COPY --from=app_php /srv/app/public public/
+===== STRUCTURE SRC =====
+
+===== GIT LOG =====
+de9b870 chore:initialisation du dépot + README
