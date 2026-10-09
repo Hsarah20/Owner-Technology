@@ -1,0 +1,10 @@
+/vendor/
+/var/
+/public/build/
+/public/assets/
+/node_modules/
+.env.local
+.env.*.local
+.idea/
+.vscode/
+*.log
