@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil — OWNER{% endblock %}
+
+{% block body %}
+    <h1>Espace documentaire OWNER</h1>
+
+    <div data-controller="hello" data-hello-name-value="OWNER">
+        <p>Test Stimulus :</p>
+        <button type="button" data-action="click->hello#greet">
+            Dire bonjour
+        </button>
+        <p data-hello-target="output"></p>
+    </div>
+{% endblock %}
