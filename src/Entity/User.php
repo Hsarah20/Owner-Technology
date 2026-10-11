@@ -15,6 +15,10 @@ use App\Entity\Client;
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+
+    public const ROLE_CLIENT = 'ROLE_CLIENT';
+    public const ROLE_ADMIN = 'ROLE_ADMIN';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -55,6 +59,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->analysisAttempts = new ArrayCollection();
         $this->timelineEvents = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int

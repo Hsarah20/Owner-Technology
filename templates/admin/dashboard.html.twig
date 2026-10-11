@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace admin — OWNER{% endblock %}
+
+{% block body %}
+    <h1>Espace administrateur</h1>
+    <p>Connecté en tant que <strong>{{ app.user.email }}</strong></p>
+    <p>Supervision des dossiers clients.</p>
+{% endblock %}

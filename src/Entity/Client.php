@@ -44,6 +44,7 @@ class Client
 
     public function __construct()
     {
+        $this->createdAt = new \DateTimeImmutable();
         $this->users = new ArrayCollection();
         $this->uploads = new ArrayCollection();
         $this->documents = new ArrayCollection();

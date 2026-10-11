@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace client — OWNER{% endblock %}
+
+{% block body %}
+    <h1>Espace client</h1>
+    <p>Connecté en tant que <strong>{{ app.user.email }}</strong></p>
+    <p>Dossier : <strong>{{ app.user.client ? app.user.client.name : 'Aucun' }}</strong></p>
+{% endblock %}
