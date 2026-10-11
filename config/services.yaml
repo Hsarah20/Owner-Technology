@@ -14,10 +14,36 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
+
+    # Auto-tag des handlers via interfaces marker
+    _instanceof:
+        App\Messenger\Command\CommandHandler:
+            tags:
+                - { name: messenger.message_handler, bus: command.bus }
+
+        App\Messenger\Query\QueryHandler:
+            tags:
+                - { name: messenger.message_handler, bus: query.bus }
+
+        App\Messenger\Event\EventListener:
+            tags:
+                - { name: messenger.message_handler, bus: event.bus }
+
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    # Alias des interfaces vers leurs implémentations Messenger
+    App\Messenger\Command\CommandBus: '@App\Messenger\Command\MessengerCommandBus'
+    App\Messenger\Query\QueryBus: '@App\Messenger\Query\MessengerQueryBus'
+    App\Messenger\Event\EventBus: '@App\Messenger\Event\MessengerEventBus'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    
+
