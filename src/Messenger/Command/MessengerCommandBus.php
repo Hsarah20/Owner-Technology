@@ -2,16 +2,20 @@
 
 namespace App\Messenger\Command;
 
+use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 final class MessengerCommandBus implements CommandBus
 {
-    public function __construct(
-        private MessageBusInterface $commandBus,
-    ) {}
+    use HandleTrait;
 
-    public function dispatch(Command $command): void
+    public function __construct(MessageBusInterface $commandBus)
     {
-        $this->commandBus->dispatch($command);
+        $this->messageBus = $commandBus;
+    }
+
+    public function dispatch(Command $command): mixed
+    {
+        return $this->handle($command);
     }
 }

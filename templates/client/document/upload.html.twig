@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Déposer des documents — OWNER{% endblock %}
+
+{% block body %}
+<h1>Déposer des documents</h1>
+
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success">{{ message }}</div>
+{% endfor %}
+
+{% for message in app.flashes('error') %}
+    <div class="alert alert-danger">{{ message }}</div>
+{% endfor %}
+
+<form method="post" enctype="multipart/form-data" data-controller="upload" data-turbo="false">
+    <div class="upload-zone"
+         data-upload-target="zone"
+         data-action="dragover->upload#dragOver dragleave->upload#dragLeave drop->upload#drop click->upload#openPicker">
+        <input type="file"
+               name="files[]"
+               multiple
+               accept=".pdf,.jpg,.jpeg,.png,.docx,.xlsx"
+               data-upload-target="input"
+               data-action="change->upload#filesSelected"
+               hidden>
+        <p class="upload-hint">Glissez vos fichiers ici ou <strong>cliquez pour parcourir</strong></p>
+        <p class="upload-formats">Formats acceptés : PDF, JPG, PNG, DOCX, XLSX — 25 Mo max par fichier</p>
+    </div>
+
+    <ul class="file-list" data-upload-target="list"></ul>
+
+    <button type="submit" class="btn-primary">Envoyer les fichiers</button>
+</form>
+
+<p><a href="">Voir tous mes documents</a></p>
+{# href="{{ path('app_client_document_list') }}" #}
+
+{% endblock %}

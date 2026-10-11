@@ -13,7 +13,6 @@ services:
       start_period: 30s
     volumes:
       - php_socket:/var/run/php
-      - storage_data:/srv/app/var/storage
     environment:
       APP_ENV: ${APP_ENV:-dev}
       APP_SECRET: ${APP_SECRET:-change-me-in-local-only}
@@ -31,8 +30,6 @@ services:
       target: app_php
     restart: unless-stopped
     command: php bin/console messenger:consume async --time-limit=3600 -vv
-    volumes:
-      - storage_data:/srv/app/var/storage
     environment:
       APP_ENV: ${APP_ENV:-dev}
       APP_SECRET: ${APP_SECRET:-change-me-in-local-only}
@@ -60,7 +57,6 @@ services:
       - php_socket:/var/run/php
       - caddy_data:/data
       - caddy_config:/config
-      - storage_data:/srv/app/var/storage:ro
 
   database:
     image: postgres:16-alpine
@@ -82,4 +78,3 @@ volumes:
   caddy_data:
   caddy_config:
   db_data:
-  storage_data:

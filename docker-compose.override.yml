@@ -2,10 +2,10 @@ services:
   php:
     build:
       target: app_php_dev
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
     volumes:
       - ./:/srv/app
       - ./docker/php/conf.d/app.dev.ini:/usr/local/etc/php/conf.d/app.dev.ini:ro
-      - storage_data:/srv/app/var/storage
     environment:
       APP_ENV: dev
       XDEBUG_MODE: "${XDEBUG_MODE:-off}"
@@ -15,6 +15,7 @@ services:
   worker:
     build:
       target: app_php_dev
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
     volumes:
       - ./:/srv/app
     environment:
