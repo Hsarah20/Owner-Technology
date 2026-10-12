@@ -47,6 +47,9 @@
             "migrations/.gitignore"
         ]
     },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v6.11.0"
+    },
     "league/flysystem-bundle": {
         "version": "3.7",
         "recipe": {

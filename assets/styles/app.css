@@ -134,3 +134,58 @@ upload-zone {
 
 .alert-success { background: #d4edda; color: #155724; }
 .alert-danger  { background: #f8d7da; color: #721c24; }
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.document-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.document-table th,
+.document-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.document-table th {
+    background: #f8f8f8;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: #666;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.badge-gray   { background: #e0e0e0; color: #333; }
+.badge-blue   { background: #cfe2ff; color: #084298; }
+.badge-orange { background: #ffe5cc; color: #8a4a00; }
+.badge-green  { background: #d1e7dd; color: #0f5132; }
+.badge-red    { background: #f8d7da; color: #842029; }
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #fafafa;
+    border-radius: 8px;
+}
+
+.total-info {
+    color: #666;
+    font-size: 0.9rem;
+}

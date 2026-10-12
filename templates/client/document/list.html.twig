@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes documents — OWNER{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <h1>Mes documents</h1>
+    <a href="{{ path('app_client_document_upload') }}" class="btn-primary">Déposer des documents</a>
+</div>
+
+{% if pagination.totalItemCount == 0 %}
+    <div class="empty-state">
+        <p>Aucun document pour l'instant.</p>
+        <a href="{{ path('app_client_document_upload') }}">Déposer votre premier document</a>
+    </div>
+{% else %}
+    <p class="total-info">{{ pagination.totalItemCount }} document(s) au total</p>
+
+    <table class="document-table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Nature</th>
+                <th>Période</th>
+                <th>Statut</th>
+                <th>Déposé le</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for document in pagination %}
+            <tr>
+                <td>{{ document.originalName }}</td>
+                <td>{{ document.nature ? document.nature.label() : '—' }}</td>
+                <td>{{ document.period ?? '—' }}</td>
+                <td>
+                    <span class="badge badge-{{ document.status.color() }}">
+                        {{ document.status.label() }}
+                    </span>
+                </td>
+                <td>{{ document.createdAt|date('d/m/Y H:i') }}</td>
+                <td>
+
+                    <a href="">Voir</a>
+                    {# {{ path('app_client_document_show', {id: document.id}) }} #}
+                    
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+{% endif %}
+{% endblock %}
