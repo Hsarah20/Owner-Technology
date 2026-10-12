@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ document.originalName }} — Admin{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <h1>{{ document.originalName }}</h1>
+    <a href="{{ path('app_admin_document_list') }}">← Retour</a>
+</div>
+
+<div class="admin-notice">
+    Client : <strong>{{ document.client.name }}</strong>
+    (SIREN {{ document.client.siren ?? '—' }})
+</div>
+
+<div class="document-detail">
+    <section class="document-info">
+        <h2>Informations</h2>
+        <dl>
+            <dt>Nature</dt>
+            <dd>{{ document.nature ? document.nature.label() : 'Non catégorisé' }}</dd>
+            <dt>Période</dt>
+            <dd>{{ document.period ?? '—' }}</dd>
+            <dt>Type MIME</dt>
+            <dd>{{ document.mimeType }}</dd>
+            <dt>Taille</dt>
+            <dd>{{ (document.size / 1024)|round(1) }} Ko</dd>
+            <dt>Déposé le</dt>
+            <dd>{{ document.createdAt|date('d/m/Y à H:i') }}</dd>
+            <dt>Statut</dt>
+            <dd>
+                <span class="badge badge-{{ document.status.color() }}">
+                    {{ document.status.label() }}
+                </span>
+            </dd>
+        </dl>
+
+        <a href="{{ path('app_admin_document_download', {id: document.id}) }}"
+           class="btn-primary"
+           data-turbo="false">
+            Télécharger
+        </a>
+
+        {% if document.status.value == 'failed' %}
+            {# <form method="post"
+                  action="{{ path('app_admin_document_retry', {id: document.id}) }}"
+                  class="inline-form"
+                  onsubmit="return confirm('Relancer l\'analyse de ce document ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('retry_' ~ document.id) }}">
+                <button type="submit" class="btn-warning">🔄 Relancer l'analyse</button>
+            </form> #}
+        {% endif %}
+    </section>
+
+    <section>
+        <h2>Timeline</h2>
+        {% include 'client/document/_timeline.html.twig' with {document: document} %}
+
+        {% if document.analysisAttempts is not empty %}
+            <h2>Tentatives d'analyse</h2>
+            <table class="attempts-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Statut</th>
+                        <th>Cause</th>
+                        <th>Début</th>
+                        <th>Fin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for attempt in document.analysisAttempts %}
+                    <tr>
+                        <td>{{ attempt.attemptNumber }}</td>
+                        <td>
+                            <span class="badge badge-{{ attempt.status.color() }}">
+                                {{ attempt.status.label() }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if attempt.failureReason %}
+                                <strong>{{ attempt.failureReason.label() }}</strong>
+                                <br><small>{{ attempt.failureReason.explanation() }}</small>
+                            {% else %}—{% endif %}
+                        </td>
+                        <td>{{ attempt.startedAt|date('d/m/Y H:i') }}</td>
+                        <td>{{ attempt.finishedAt ? attempt.finishedAt|date('d/m/Y H:i') : '—' }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

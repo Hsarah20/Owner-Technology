@@ -331,3 +331,87 @@ upload-zone {
 .muted {
     color: #999;
 }
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+
+.kpi-card {
+    background: #f8f8f8;
+    padding: 1.5rem 1rem;
+    border-radius: 8px;
+    text-align: center;
+    border-left: 4px solid #ccc;
+}
+
+.kpi-card.kpi-warning { border-left-color: #ffc107; }
+.kpi-card.kpi-danger  { border-left-color: #dc3545; }
+.kpi-card.kpi-success { border-left-color: #28a745; }
+
+.kpi-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1a1a1a;
+    line-height: 1;
+}
+
+.kpi-label {
+    display: block;
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.filters {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.filters select {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: white;
+}
+
+.btn-secondary {
+    padding: 0.5rem 1rem;
+    background: #f0f0f0;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-warning {
+    padding: 0.5rem 1rem;
+    background: #ffc107;
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-left: 0.5rem;
+}
+
+.inline-form {
+    display: inline-block;
+    margin-left: 0.5rem;
+}
+
+.admin-notice {
+    background: #e7f3ff;
+    border-left: 4px solid #0066cc;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 2rem;
+}

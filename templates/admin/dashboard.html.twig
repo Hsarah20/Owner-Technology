@@ -1,9 +1,66 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Espace admin — OWNER{% endblock %}
+{% block title %}Supervision — OWNER{% endblock %}
 
 {% block body %}
-    <h1>Espace administrateur</h1>
-    <p>Connecté en tant que <strong>{{ app.user.email }}</strong></p>
-    <p>Supervision des dossiers clients.</p>
+<div class="page-header">
+    <h1>Supervision OWNER</h1>
+    <a href="{{ path('app_admin_document_list') }}" class="btn-primary">
+    Tous les documents</a>
+</div>
+
+<section class="kpi-grid">
+    <div class="kpi-card">
+        <span class="kpi-value">{{ countClients }}</span>
+        <span class="kpi-label">Clients</span>
+    </div>
+    <div class="kpi-card">
+        <span class="kpi-value">{{ countDocuments }}</span>
+        <span class="kpi-label">Documents</span>
+    </div>
+    <div class="kpi-card kpi-warning">
+        <span class="kpi-value">{{ countProcessing }}</span>
+        <span class="kpi-label">En cours</span>
+    </div>
+    <div class="kpi-card kpi-danger">
+        <span class="kpi-value">{{ countFailed }}</span>
+        <span class="kpi-label">En échec</span>
+    </div>
+    <div class="kpi-card kpi-success">
+        <span class="kpi-value">{{ countCompleted }}</span>
+        <span class="kpi-label">Terminés</span>
+    </div>
+</section>
+
+<section>
+    <h2>Documents en échec récents</h2>
+    {% if failedDocuments is empty %}
+        <p class="muted">Aucun échec. 👌</p>
+    {% else %}
+        <table class="document-table">
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th>Document</th>
+                    <th>Déposé le</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for document in failedDocuments %}
+                <tr>
+                    <td>{{ document.client.name }}</td>
+                    <td>{{ document.originalName }}</td>
+                    <td>{{ document.createdAt|date('d/m/Y H:i') }}</td>
+                    <td>
+                        <a href="{{ path('app_admin_document_show', {id: document.id}) }}">
+                            Voir
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</section>
 {% endblock %}
