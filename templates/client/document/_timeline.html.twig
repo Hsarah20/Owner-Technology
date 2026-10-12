@@ -1,0 +1,28 @@
+{% if document.timelineEvents is empty %}
+    <p class="muted">Aucun événement pour ce document.</p>
+{% else %}
+    <ol class="timeline">
+        {% for event in document.timelineEvents %}
+            <li class="timeline-item timeline-{{ event.type.value }}">
+                <div class="timeline-icon">
+                    {% if event.type.value == 'uploaded' %}📥
+                    {% elseif event.type.value == 'analysis_started' %}⏳
+                    {% elseif event.type.value == 'analysis_completed' %}✅
+                    {% elseif event.type.value == 'analysis_failed' %}❌
+                    {% elseif event.type.value == 'retry_requested' %}🔄
+                    {% else %}•{% endif %}
+                </div>
+                <div class="timeline-content">
+                    <div class="timeline-header">
+                        <strong>{{ event.type.label() }}</strong>
+                        <time>{{ event.createdAt|date('d/m/Y H:i:s') }}</time>
+                    </div>
+                    <p class="timeline-message">{{ event.message }}</p>
+                    {% if event.actor %}
+                        <p class="timeline-actor">Par {{ event.actor.email }}</p>
+                    {% endif %}
+                </div>
+            </li>
+        {% endfor %}
+    </ol>
+{% endif %}

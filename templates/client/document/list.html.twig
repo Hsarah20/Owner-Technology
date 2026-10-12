@@ -40,9 +40,7 @@
                 </td>
                 <td>{{ document.createdAt|date('d/m/Y H:i') }}</td>
                 <td>
-
-                    <a href="">Voir</a>
-                    {# {{ path('app_client_document_show', {id: document.id}) }} #}
+                    <a href="{{ path('app_client_document_show', {id: document.id}) }}">Voir</a>
                     
                 </td>
             </tr>

@@ -21,7 +21,7 @@ class DocumentRepository extends ServiceEntityRepository
         parent::__construct($registry, Document::class);
     }
 
-    public function paginateForClient(Client $client, int $page = 1, int $limit = 20): PaginationInterface
+    public function paginateForClient(Client $client, int $page = 1, int $limit = 10): PaginationInterface
     {
         $qb = $this->createQueryBuilder('d')
             ->andWhere('d.client = :client')

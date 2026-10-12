@@ -52,13 +52,14 @@ class Document
     /**
      * @var Collection<int, AnalysisAttempt>
      */
-    #[ORM\OneToMany(targetEntity: AnalysisAttempt::class, mappedBy: 'document')]
+    #[ORM\OneToMany(targetEntity: AnalysisAttempt::class, mappedBy: 'document',orphanRemoval: true)]
     private Collection $analysisAttempts;
 
     /**
      * @var Collection<int, TimelineEvent>
      */
-    #[ORM\OneToMany(targetEntity: TimelineEvent::class, mappedBy: 'document')]
+    #[ORM\OneToMany(targetEntity: TimelineEvent::class, mappedBy: 'document', orphanRemoval: true)]
+    #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $timelineEvents;
 
     public function __construct()

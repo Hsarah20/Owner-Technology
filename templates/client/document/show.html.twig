@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ document.originalName }} — OWNER{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <h1>{{ document.originalName }}</h1>
+    <a href="{{ path('app_client_document_list') }}">← Retour à la liste</a>
+</div>
+
+<div class="document-detail">
+    <section class="document-info">
+        <h2>Informations</h2>
+        <dl>
+            <dt>Nature</dt>
+            <dd>{{ document.nature ? document.nature.label() : 'Non catégorisé' }}</dd>
+
+            <dt>Période</dt>
+            <dd>{{ document.period ?? '—' }}</dd>
+
+            <dt>Type de fichier</dt>
+            <dd>{{ document.mimeType }}</dd>
+
+            <dt>Taille</dt>
+            <dd>{{ (document.size / 1024)|round(1) }} Ko</dd>
+
+            <dt>Déposé le</dt>
+            <dd>{{ document.createdAt|date('d/m/Y à H:i') }}</dd>
+
+            <dt>Statut actuel</dt>
+            <dd>
+                <span class="badge badge-{{ document.status.color() }}">
+                    {{ document.status.label() }}
+                </span>
+            </dd>
+        </dl>
+        <a href="{{ path('app_client_document_download', {id: document.id}) }}" class="btn-primary" data-turbo="false">
+            Télécharger le fichier original
+        </a>
+    </section>
+
+    <section class="document-timeline">
+        <h2>Historique</h2>
+        {% include 'client/document/_timeline.html.twig' with {document: document} %}
+    </section>
+
+    {% if document.analysisAttempts is not empty %}
+    <section class="document-attempts">
+        <h2>Tentatives d'analyse</h2>
+        <table class="attempts-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Statut</th>
+                    <th>Cause d'échec</th>
+                    <th>Début</th>
+                    <th>Fin</th>
+                    <th>Résultat</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for attempt in document.analysisAttempts %}
+                <tr>
+                    <td>{{ attempt.attemptNumber }}</td>
+                    <td>
+                        <span class="badge badge-{{ attempt.status.color() }}">
+                            {{ attempt.status.label() }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if attempt.failureReason %}
+                            <strong>{{ attempt.failureReason.label() }}</strong>
+                            <br><small>{{ attempt.failureReason.explanation() }}</small>
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                    <td>{{ attempt.startedAt|date('d/m/Y H:i:s') }}</td>
+                    <td>{{ attempt.finishedAt ? attempt.finishedAt|date('d/m/Y H:i:s') : '—' }}</td>
+                    <td>
+                        {% if attempt.result %}
+                            <details>
+                                <summary>Voir</summary>
+                                <pre>{{ attempt.result|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+                            </details>
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}
