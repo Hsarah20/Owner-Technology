@@ -20,11 +20,13 @@ class DocumentController extends AbstractController
     {
         $client = $this->getUser()->getClient();
         $page = max(1, (int) $request->query->get('page', 1));
+        $limit = max(5, min(100, (int) $request->query->get('limit', 20)));
 
-        $pagination = $repo->paginateForClient($client, $page);
+        $pagination = $repo->paginateForClient($client, $page,$limit);
 
         return $this->render('client/document/list.html.twig', [
             'pagination' => $pagination,
+            'limit' => $limit,
         ]);
     }
 
