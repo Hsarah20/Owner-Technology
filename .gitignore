@@ -1,5 +1,10 @@
 
 ###> symfony/framework-bundle ###
+.env
+.env.dev
+.env.test
+.env.local
+.env.*.local
 /.env.local
 /.env.local.php
 /.env.*.local
@@ -18,3 +23,13 @@
 /phpunit.xml
 /.phpunit.cache/
 ###< phpunit/phpunit ###
+
+# Artefacts Docker
+CACHED
+=
+\[owner-mvp_*
+*_php
+*_worker
+
+# Logs
+*.log
