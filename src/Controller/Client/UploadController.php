@@ -33,7 +33,7 @@ class UploadController extends AbstractController
             }
 
             try {
-                $documents = $commandBus->dispatch(new UploadDocumentsCommand(
+                $documents = $commandBus->dispatchSync(new UploadDocumentsCommand(
                     client: $client,
                     uploader: $user,
                     files: $files,

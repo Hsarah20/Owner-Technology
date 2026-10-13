@@ -22,6 +22,7 @@ final class RetryAnalysisHandler implements CommandHandler
 
     public function __invoke(RetryAnalysisCommand $command): void
     {
+       
         $document = $this->em->getRepository(Document::class)->find($command->documentId);
 
         if (!$document) {

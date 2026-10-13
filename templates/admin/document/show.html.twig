@@ -42,13 +42,13 @@
         </a>
 
         {% if document.status.value == 'failed' %}
-            {# <form method="post"
+            <form method="post"
                   action="{{ path('app_admin_document_retry', {id: document.id}) }}"
                   class="inline-form"
                   onsubmit="return confirm('Relancer l\'analyse de ce document ?');">
                 <input type="hidden" name="_token" value="{{ csrf_token('retry_' ~ document.id) }}">
                 <button type="submit" class="btn-warning">🔄 Relancer l'analyse</button>
-            </form> #}
+            </form>
         {% endif %}
     </section>
 
