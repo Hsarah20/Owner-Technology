@@ -29,7 +29,15 @@
     </header>
 
     <main>
-        {% block body %}{% endblock %}
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type == 'error' ? 'danger' : (type == 'success' ? 'success' : 'info') }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+        
+    {% block body %}{% endblock %}
     </main>
 </body>
 </html>
