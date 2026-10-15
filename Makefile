@@ -170,6 +170,10 @@ init: ## Init complète du projet (build + up + migrate + fixtures)
 	@echo "→ Démarrage..."
 	$(COMPOSE) up -d
 	@sleep 5
+	@echo "→ Attente de la base de données..."
+	@until $(DB) pg_isready -U owner >/dev/null 2>&1; do sleep 1; done
+	@echo "→ Installation des dépendances Composer..."
+	$(COMPOSER) install --no-interaction --no-progress
 	@echo "→ Migrations..."
 	$(CONSOLE) doctrine:migrations:migrate --no-interaction
 	@echo "→ Fixtures..."
