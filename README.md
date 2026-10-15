@@ -1,154 +1,100 @@
 # OWNER — Espace documentaire (MVP)
 
-Test technique : espace client + admin pour le dépôt et le suivi d'analyse de pièces.
+Test technique : espace client + administrateur pour le dépôt, le suivi et l'analyse simulée de pièces comptables, juridiques et sociales.
 
-## Stack technique
 
-| Composant | Version |
-|---|---|
-| PHP | 8.3 |
-| Symfony | 7.4 LTS |
-| PostgreSQL | 16 |
-| Caddy | 2.8 |
-| Turbo + Stimulus | via `symfony/ux-turbo` |
-| AssetMapper | remplace Webpack (pas de Node.js) |
-| Messenger | transport Doctrine (worker dédié) |
-| Mailpit | serveur SMTP de dev |
-| pgAdmin | interface web PostgreSQL |
+## Le projet
 
-## Prérequis
+OWNER accompagne des dirigeants dans l'optimisation fiscale et sociale. Ce MVP permet :
 
-- Docker Engine ≥ 24
-- Docker Compose v2.20+
+- **Au client** : déposer ses pièces, les retrouver, suivre leur analyse
+- **À l'admin** : superviser plusieurs dossiers, relancer les analyses en échec
 
-Aucun PHP, Composer ou Node.js n'est nécessaire sur la machine hôte : tout tourne dans Docker.
+---
 
 ## Démarrage rapide
 
 ```bash
-# 1. Cloner le projet
-git clone <url-du-repo> owner-mvp
+git clone https://github.com/Hsarah20/Owner-Technology.git owner-mvp
 cd owner-mvp
-
-# 2. Créer le fichier .env (déjà fourni, à adapter si besoin)
-#    Par défaut : APP_SECRET=change-me-in-local-only
-
-# 3. Lancer la stack
-export APP_SECRET=dev-secret
-docker compose build
-docker compose up -d
-
-# 4. Vérifier
-docker compose ps
-# 6 conteneurs doivent être "Up" (dont database et mailer "healthy")
+make init
 ```
 
-## Accès aux services
+L'application est prête sur **https://localhost:8443**.
 
-| Service | URL | Identifiants |
-|---|---|---|
-| Application | https://localhost:8443 | — |
-| Mailpit (emails) | http://localhost:8026 | — |
-| pgAdmin | http://localhost:8081 | `admin@yopmail.com` / `admin` |
-| PostgreSQL | `localhost:5433` | `owner` / `owner` / db `owner` |
+---
 
-⚠️ Le certificat HTTPS est auto-signé en dev. Accepte l'avertissement dans le navigateur.
+## Comptes de test
 
-## Commandes utiles
+| Rôle        | Email                  | Mot de passe |
+|-----------  |--- --------------      |--- ----------|
+| Admin OWNER | `admin@owner.fr`       | `admin1234`  |
+| Client ACME | `client-acme@owner.fr` | `client1234` |
+| Client BETA | `client-beta@owner.fr` | `client1234` |
+
+---
+
+## Stack
+
+| Composant          | Version                      |
+|---                 |---                           |
+| PHP                | 8.3                          |
+| Symfony            | 7.4 LTS                      |
+| PostgreSQL         | 16                           |
+| Caddy              | 2.8                          |
+| Turbo + Stimulus   | via `symfony/ux-turbo`       |
+| AssetMapper        | pas de Node.js, pas de build |
+| Messenger          | worker async                 |
+| Flysystem          | stockage abstrait (S3-ready) |
+
+---
+
+## Documentation
+
+| Document                                     | Contenu                           |
+|----------------------------------------------|-----------------------------------|
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Le pattern 3 bus, Voter, UseCases |
+| [docs/AI_USAGE.md](docs/AI_USAGE.md)         | Usage de l'IA et bugs corrigés    |
+| [Makefile](Makefile)                         | Toutes les commandes utiles       |
+
+---
+
+## Commandes les plus utilisées
 
 ```bash
-# Console Symfony
-docker compose exec php php bin/console
-
-# Composer
-docker compose exec php composer <cmd>
-
-# Migrations
-docker compose exec php php bin/console doctrine:migrations:migrate
-docker compose exec php php bin/console doctrine:migrations:status
-
-# Base de données (SQL direct)
-docker compose exec php php bin/console dbal:run-sql "SELECT version()"
-docker compose exec database psql -U owner -d owner
-
-# Logs
-docker compose logs -f php
-docker compose logs -f worker
-docker compose logs -f caddy
-
-# Redémarrer un service
-docker compose restart php
-docker compose restart worker
+make help            # liste toutes les commandes
+make init            # build + up + migrate + fixtures
+make logs-worker     # surveiller le worker Messenger
+make reset           # repartir de zéro
+make db-shell        # psql interactif
 ```
 
-## Arrêt et nettoyage
+Voir le [Makefile](Makefile) pour la liste complète.
 
-```bash
-# Arrêter sans perdre les données (base, storage)
-docker compose down
+---
 
-# Tout supprimer, repartir de zéro
-docker compose down -v --remove-orphans
-docker volume ls | grep owner-mvp   # vérifier qu'il ne reste rien
-```
-
-## Architecture Docker
-
-| Conteneur | Rôle |
-|---|---|
-| `owner_php` | PHP-FPM 8.3, exécute Symfony |
-| `owner_worker` | Consomme les messages Messenger asynchrones |
-| `owner_caddy` | Reverse proxy HTTPS, sert `/public` |
-| `owner-mvp-database-1` | PostgreSQL 16 |
-| `owner_mailer` | Mailpit, capture les emails de dev |
-| `owner_pgadmin` | Interface web d'administration PostgreSQL |
-
-Tous les services partagent le réseau Docker `owner-mvp_default`, ce qui permet la résolution DNS interne (`database`, `php`, `mailer`, etc.).
-
-## Environnements
-
-| Environnement | Fichiers chargés | Commande |
-|---|---|---|
-| Dev | `docker-compose.yml` + `docker-compose.override.yml` (auto) | `docker compose up -d` |
-| Prod | `docker-compose.yml` + `docker-compose.prod.yml` | `docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d` |
-
-## Connexion à la base depuis pgAdmin
-
-Une fois connecté à http://localhost:8081 :
-
-1. Clic droit sur **Servers** → **Register** → **Server…**
-2. Onglet **General** : Name = `OWNER`
-3. Onglet **Connection** :
-   - Host name/address : `database` (⚠️ pas `localhost`)
-   - Port : `5432`
-   - Maintenance database : `owner`
-   - Username : `owner`
-   - Password : `owner`
-   - Cocher **Save password**
-4. **Save**
-
-> Dans pgAdmin, `database` correspond au nom du service Docker. `localhost` pointerait vers le conteneur pgAdmin lui-même, ce qui échouerait.
-
-
-## Structure du projet
+## Architecture en un coup d'œil
 
 ```
-owner-mvp/
-├── assets/                   # JS/CSS (AssetMapper)
-├── bin/console
-├── config/                   # Configuration Symfony
-├── docker/                   # Fichiers Docker (php, caddy)
-├── migrations/               # Migrations Doctrine
-├── public/index.php
-├── src/                      # Code métier
-├── templates/                # Templates Twig
-├── var/                      # Cache, logs, storage
-├── composer.json
-├── docker-compose.yml        # Base
-├── docker-compose.override.yml  # Dev
-├── docker-compose.prod.yml   # Prod
-├── Dockerfile                # Multi-stage PHP-FPM + Caddy
-├── importmap.php             # Déclaration des JS
-└── .env
+src/
+├── Controller/
+│   ├── Admin/             Espace admin
+│   └── Client/            Espace client
+├── Entity/                Client, User, Upload, Document,
+│                          AnalysisAttempt, TimelineEvent
+├── Messenger/             3 bus (command/query/event)
+├── Security/Voter/        DocumentVoter (cloisonnement strict)
+├── Service/Storage/       DocumentStorage (Flysystem)
+└── UseCase/
+    └── Document/
+        ├── Analyze/       Analyse simulée
+        ├── Retry/         Relance admin
+        └── Upload/        Dépôt client
 ```
 
+Détails dans [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
+
+---
+
+**OWNER · Test technique · Octobre 2026**
