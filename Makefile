@@ -1,3 +1,10 @@
+# ============================================================
+#  Variables d'environnement
+# ============================================================
+export APP_SECRET := $(shell [ -f .env ] && grep -E '^APP_SECRET=' .env | cut -d'=' -f2 || echo dev-secret)
+export HOST_UID := $(shell id -u)
+export HOST_GID := $(shell id -g)
+
 COMPOSE      := docker compose
 PHP          := $(COMPOSE) exec php
 CONSOLE      := $(PHP) php bin/console
@@ -154,6 +161,10 @@ prod-check: ## Vérifie la config prod
 
 # ---------- INIT / RESET ----------
 init: ## Init complète du projet (build + up + migrate + fixtures)
+	@if [ ! -f .env ]; then \
+		echo "→ Création du .env depuis .env.dist"; \
+		cp .env.dist .env; \
+	fi
 	@echo "→ Build des images..."
 	$(COMPOSE) build
 	@echo "→ Démarrage..."
