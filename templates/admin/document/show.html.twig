@@ -20,7 +20,7 @@
             <dt>Nature</dt>
             <dd>{{ document.nature ? document.nature.label() : 'Non catégorisé' }}</dd>
             <dt>Période</dt>
-            <dd>{{ document.period ?? '—' }}</dd>
+            <dd>{{ document.formattedPeriod ?? '—' }}</dd>
             <dt>Type MIME</dt>
             <dd>{{ document.mimeType }}</dd>
             <dt>Taille</dt>

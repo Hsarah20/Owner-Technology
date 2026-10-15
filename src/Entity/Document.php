@@ -32,8 +32,11 @@ class Document
     #[ORM\Column(length: 30, nullable: true, enumType: DocumentNature::class)]
     private ?DocumentNature $nature = null;
 
-    #[ORM\Column(length: 20, nullable: true)]
-    private ?string $period = null;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $periodYear = null;
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $periodMonth = null;
 
     #[ORM\Column(length: 20, enumType: DocumentStatus::class)]
     private DocumentStatus $status = DocumentStatus::RECEIVED;
@@ -134,15 +137,25 @@ class Document
         return $this;
     }
 
-    public function getPeriod(): ?string
+    public function getPeriodYear(): ?int
     {
-        return $this->period;
+        return $this->periodYear;
     }
 
-    public function setPeriod(?string $period): static
+    public function setPeriodYear(?int $periodYear): static
     {
-        $this->period = $period;
+        $this->periodYear = $periodYear;
+        return $this;
+    }
 
+    public function getPeriodMonth(): ?int
+    {
+        return $this->periodMonth;
+    }
+
+    public function setPeriodMonth(?int $periodMonth): static
+    {
+        $this->periodMonth = $periodMonth;
         return $this;
     }
 
@@ -252,5 +265,31 @@ class Document
         }
 
         return $this;
+    }
+
+    /**
+     * Retourne la période formatée (ex: "Mars 2024") ou null.
+     */
+    public function getFormattedPeriod(): ?string
+    {
+        if ($this->periodYear === null && $this->periodMonth === null) {
+            return null;
+        }
+
+        $mois = [
+            1 => 'Janvier', 2 => 'Février', 3 => 'Mars', 4 => 'Avril',
+            5 => 'Mai', 6 => 'Juin', 7 => 'Juillet', 8 => 'Août',
+            9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre',
+        ];
+
+        if ($this->periodYear && $this->periodMonth) {
+            return $mois[$this->periodMonth] . ' ' . $this->periodYear;
+        }
+
+        if ($this->periodYear) {
+            return 'Année ' . $this->periodYear;
+        }
+
+        return $mois[$this->periodMonth] ?? null;
     }
 }

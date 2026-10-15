@@ -45,7 +45,8 @@ class VolumeFixtures extends Fixture
                 $doc->setMimeType('application/pdf');
                 $doc->setSize(random_int(50000, 5000000));
                 $doc->setNature($natures[array_rand($natures)]);
-                $doc->setPeriod(sprintf('2024-%02d', random_int(1, 12)));
+                $doc->setPeriodYear(2024);
+                $doc->setPeriodMonth(random_int(1, 12));
                 $doc->setStatus($statuses[array_rand($statuses)]);
                 $doc->setCreatedAt(new \DateTimeImmutable(sprintf('-%d days -%d hours', $batch * 15, $i)));
                 $manager->persist($doc);

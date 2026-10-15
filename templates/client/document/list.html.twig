@@ -32,7 +32,7 @@
             <tr>
                 <td>{{ document.originalName }}</td>
                 <td>{{ document.nature ? document.nature.label() : '—' }}</td>
-                <td>{{ document.period ?? '—' }}</td>
+                <td>{{ document.formattedPeriod ?? '—' }}</td>
                 <td>
                     <span class="badge badge-{{ document.status.color() }}">
                         {{ document.status.label() }}

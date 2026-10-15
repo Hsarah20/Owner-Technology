@@ -16,7 +16,7 @@
             <dd>{{ document.nature ? document.nature.label() : 'Non catégorisé' }}</dd>
 
             <dt>Période</dt>
-            <dd>{{ document.period ?? '—' }}</dd>
+            <dd>{{ document.formattedPeriod ?? '—' }}</dd>
 
             <dt>Type de fichier</dt>
             <dd>{{ document.mimeType }}</dd>
