@@ -1,0 +1,24 @@
+<form method="get" class="filters">
+    <select name="status">
+        <option value="">Tous les statuts</option>
+        {% for s in statuses %}
+            <option value="{{ s.value }}" {{ currentStatus and currentStatus.value == s.value ? 'selected' : '' }}>
+                {{ s.label() }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <select name="client">
+        <option value="">Tous les clients</option>
+        {% for c in clients %}
+            <option value="{{ c.id }}" {{ currentClient and currentClient.id == c.id ? 'selected' : '' }}>
+                {{ c.name }}
+            </option>
+        {% endfor %}
+    </select>
+
+    {# <input type="hidden" name="limit" value="{{ limit }}"> #}
+
+    <button type="submit" class="btn-primary">Filtrer</button>
+    <a href="{{ path('app_admin_document_list') }}" class="btn-secondary">Réinitialiser</a>
+</form>

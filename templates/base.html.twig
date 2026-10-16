@@ -14,21 +14,26 @@
 </head>
 <body>
     <header>
-        <nav>
-            <a href="{{ path('app_home') }}">OWNER</a>
-            {% if app.user %}
-                <span class="user-info">
-                    Connecté : {{ app.user.email }}
-                    {% if app.user.client %}({{ app.user.client.name }}){% endif %}
-                </span>
-                <a href="{{ path('app_logout') }}">Déconnexion</a>
-            {% else %}
-                <a href="{{ path('app_login') }}">Connexion</a>
-            {% endif %}
+        <nav class="header-nav">
+            <a href="{{ path('app_home') }}" class="brand">OWNER</a>
+
+            <div class="header-actions">
+                {% if app.user %}
+                    <span class="user-info">
+                        {{ app.user.email }}
+                        {% if app.user.client %}<small>({{ app.user.client.name }})</small>{% endif %}
+                    </span>
+                    <a href="{{ path('app_logout') }}" class="btn-logout">Déconnexion</a>
+                {% else %}
+                    <a href="{{ path('app_login') }}">Connexion</a>
+                {% endif %}
+            </div>
         </nav>
     </header>
 
     <main>
+        {% include 'partials/_nav.html.twig' %}
+
         {% for type, messages in app.flashes %}
             {% for message in messages %}
                 <div class="alert alert-{{ type == 'error' ? 'danger' : (type == 'success' ? 'success' : 'info') }}">
@@ -36,8 +41,8 @@
                 </div>
             {% endfor %}
         {% endfor %}
-        
-    {% block body %}{% endblock %}
+
+        {% block body %}{% endblock %}
     </main>
 </body>
 </html>

@@ -41,6 +41,7 @@ class DocumentController extends AbstractController
 
         return $this->render('admin/document/list.html.twig', [
             'pagination' => $pagination,
+            'limit' => $limit,
             'clients' => $clientRepo->findAllOrdered(),
             'statuses' => DocumentStatus::cases(),
             'currentStatus' => $status,

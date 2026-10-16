@@ -671,3 +671,114 @@ h2 {
         gap: 0.25rem;
     }
 }
+
+/* ---------- Header navigation ---------- */
+.header-nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.header-nav .brand {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-info {
+    font-size: 0.9rem;
+    opacity: 0.85;
+}
+
+.user-info small {
+    opacity: 0.7;
+}
+
+.btn-logout {
+    font-size: 0.85rem;
+    padding: 0.35rem 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-sm);
+    transition: background 0.15s;
+}
+
+.btn-logout:hover {
+    background: rgba(255, 255, 255, 0.1);
+    text-decoration: none;
+}
+
+/* ---------- Application navigation (client + admin) ---------- */
+.app-nav {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.nav-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-muted);
+    border-right: 1px solid var(--color-border);
+    margin-right: 0.5rem;
+}
+
+.app-nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--color-text);
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background 0.15s, color 0.15s;
+}
+
+.app-nav a:hover {
+    background: #f0f0f0;
+}
+
+.app-nav a.active {
+    background: var(--color-primary);
+    color: white;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+    .app-nav {
+        gap: 0.25rem;
+    }
+
+    .app-nav a {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .nav-badge {
+        display: none;
+    }
+
+    .user-info {
+        font-size: 0.8rem;
+    }
+}

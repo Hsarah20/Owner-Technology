@@ -1,0 +1,53 @@
+{% if pagination.totalItemCount == 0 %}
+    <div class="empty-state">
+        <p>Aucun document trouvé.</p>
+        {% if currentYear is defined  or currentMonth is defined  or currentNature is defined  or currentClient is defined and currentClient %}
+            <p>Essayez d'élargir vos filtres.</p>
+            <a href="{{ path(routePrefix ~ 'list') }}" class="btn-secondary">Voir tous les documents</a>
+        {% else %}
+            <p>Aucun document pour l'instant.</p>
+        {% endif %}
+    </div>
+{% else %}
+    <table class="document-table">
+        <thead>
+            <tr>
+                {% if showClient|default(false) %}
+                    <th>Client</th>
+                {% endif %}
+                <th>Nom</th>
+                <th>Nature</th>
+                <th>Période</th>
+                <th>Statut</th>
+                <th>Déposé le</th>
+                <th>Actions</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for document in pagination %}
+            <tr>
+                {% if showClient|default(false) %}
+                    <td>{{ document.client.name }}</td>
+                {% endif %}
+                <td>{{ document.originalName }}</td>
+                <td>{{ document.nature ? document.nature.label() : '—' }}</td>
+                <td>{{ document.formattedPeriod ?? '—' }}</td>
+                <td>
+                    <span class="badge badge-{{ document.status.color() }}">
+                        {{ document.status.label() }}
+                    </span>
+                </td>
+                <td>{{ document.createdAt|date('d/m/Y H:i') }}</td>
+                <td>
+                    <a href="{{ path(routePrefix ~ 'show', {id: document.id}) }}">Voir</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+{% endif %}

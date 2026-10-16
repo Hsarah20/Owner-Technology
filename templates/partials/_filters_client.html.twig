@@ -1,0 +1,30 @@
+<form method="get" class="filters">
+    <select name="year">
+        <option value="">Toutes les années</option>
+        {% for y in availableYears %}
+            <option value="{{ y }}" {{ currentYear == y ? 'selected' : '' }}>{{ y }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="month">
+        <option value="">Tous les mois</option>
+        {% set mois = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'] %}
+        {% for i in 1..12 %}
+            <option value="{{ i }}" {{ currentMonth == i ? 'selected' : '' }}>{{ mois[i-1] }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="nature">
+        <option value="">Toutes les natures</option>
+        {% for n in natures %}
+            <option value="{{ n.value }}" {{ currentNature and currentNature.value == n.value ? 'selected' : '' }}>
+                {{ n.label() }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <input type="hidden" name="limit" value="{{ limit }}">
+
+    <button type="submit" class="btn-primary">Filtrer</button>
+    <a href="{{ path('app_client_document_list') }}" class="btn-secondary">Réinitialiser</a>
+</form>

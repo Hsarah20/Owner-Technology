@@ -1,0 +1,41 @@
+{% if app.user %}
+    {% set currentRoute = app.request.attributes.get('_route') %}
+
+    <nav class="app-nav">
+        {% if is_granted('ROLE_ADMIN') %}
+            {# ---------- Menu ADMIN ---------- #}
+            <span class="nav-badge">Espace admin</span>
+
+            <a href="{{ path('app_admin_dashboard') }}"
+               class="{{ currentRoute == 'app_admin_dashboard' ? 'active' : '' }}">
+                📊 Dashboard
+            </a>
+            <a href="{{ path('app_admin_document_list') }}"
+               class="{{ currentRoute == 'app_admin_document_list' ? 'active' : '' }}">
+                📄 Tous les documents
+            </a>
+
+        {% elseif is_granted('ROLE_CLIENT') %}
+            {# ---------- Menu CLIENT ---------- #}
+            <span class="nav-badge">Espace client</span>
+
+            <a href="{{ path('app_client_dashboard') }}"
+               class="{{ currentRoute == 'app_client_dashboard' ? 'active' : '' }}">
+                📊 Dashboard
+            </a>
+
+            <a href="{{ path('app_client_document_list') }}"
+               class="{{ currentRoute in ['app_client_document_list', 'app_client_document_show'] ? 'active' : '' }}">
+                📄 Mes documents
+            </a>
+            <a href="{{ path('app_client_document_upload') }}"
+               class="{{ currentRoute == 'app_client_document_upload' ? 'active' : '' }}">
+                📁 Déposer
+            </a>
+            <a href="{{ path('app_client_document_bulk_form') }}"
+               class="{{ currentRoute == 'app_client_document_bulk_form' ? 'active' : '' }}">
+                🏷️ Classer en masse
+            </a>
+        {% endif %}
+    </nav>
+{% endif %}
