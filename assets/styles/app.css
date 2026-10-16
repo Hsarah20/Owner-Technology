@@ -1,421 +1,8 @@
-body {
-    font-family: system-ui, -apple-system, sans-serif;
-    margin: 0;
-    padding: 0;
-}
+/* ==========================================================================
+   OWNER — Feuille de styles principale
+   ========================================================================== */
 
-header {
-    padding: 1rem 2rem;
-    background: #1a1a1a;
-    color: white;
-}
-
-header nav {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    justify-content: space-between;
-}
-.user-info {
-    font-size: 0.9rem;
-    opacity: 0.8;
-}
-header a {
-    color: white;
-    text-decoration: none;
-}
-
-main {
-    padding: 2rem;
-}
-.login-container {
-    max-width: 400px;
-    margin: 4rem auto;
-    padding: 2rem;
-    background: #f8f8f8;
-    border-radius: 8px;
-}
-
-.login-container h1 {
-    margin-top: 0;
-    font-size: 1.5rem;
-}
-
-.login-container label {
-    display: block;
-    margin-top: 1rem;
-    font-weight: 600;
-}
-
-.login-container input {
-    width: 100%;
-    padding: 0.5rem;
-    margin-top: 0.25rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.login-container button {
-    margin-top: 1.5rem;
-    padding: 0.75rem 1.5rem;
-    background: #1a1a1a;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-upload-zone {
-    border: 2px dashed #ccc;
-    border-radius: 8px;
-    padding: 3rem 2rem;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    background: #fafafa;
-}
-
-.upload-zone:hover,
-.upload-zone.is-dragover {
-    border-color: #1a1a1a;
-    background: #f0f0f0;
-}
-
-.upload-hint {
-    font-size: 1.1rem;
-    margin: 0.5rem 0;
-}
-
-.upload-formats {
-    font-size: 0.85rem;
-    color: #666;
-    margin: 0;
-}
-
-.file-list {
-    list-style: none;
-    padding: 0;
-    margin: 1rem 0;
-}
-
-.file-list li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    background: #f5f5f5;
-    border-radius: 4px;
-    margin-bottom: 0.5rem;
-}
-
-.file-list button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    color: #a00;
-    font-size: 1.2rem;
-}
-
-.btn-primary {
-    padding: 0.75rem 1.5rem;
-    background: #1a1a1a;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-.alert {
-    padding: 0.75rem 1rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-}
-
-.alert-success { background: #d4edda; color: #155724; }
-.alert-danger  { background: #f8d7da; color: #721c24; }
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-}
-
-.document-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.document-table th,
-.document-table td {
-    padding: 0.75rem 1rem;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-}
-
-.document-table th {
-    background: #f8f8f8;
-    font-weight: 600;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    color: #666;
-}
-
-.badge {
-    display: inline-block;
-    padding: 0.2rem 0.6rem;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-.badge-gray   { background: #e0e0e0; color: #333; }
-.badge-blue   { background: #cfe2ff; color: #084298; }
-.badge-orange { background: #ffe5cc; color: #8a4a00; }
-.badge-green  { background: #d1e7dd; color: #0f5132; }
-.badge-red    { background: #f8d7da; color: #842029; }
-
-.empty-state {
-    text-align: center;
-    padding: 4rem 2rem;
-    background: #fafafa;
-    border-radius: 8px;
-}
-
-.total-info {
-    color: #666;
-    font-size: 0.9rem;
-}
-.document-detail {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 2rem;
-}
-
-@media (max-width: 768px) {
-    .document-detail {
-        grid-template-columns: 1fr;
-    }
-}
-
-.document-info dl {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0.5rem 1rem;
-    margin: 1rem 0 2rem;
-}
-
-.document-info dt {
-    font-weight: 600;
-    color: #666;
-}
-
-.document-info dd {
-    margin: 0;
-}
-
-.timeline {
-    list-style: none;
-    padding: 0;
-    position: relative;
-}
-
-.timeline::before {
-    content: '';
-    position: absolute;
-    left: 1rem;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: #e0e0e0;
-}
-
-.timeline-item {
-    display: flex;
-    gap: 1rem;
-    padding: 0.75rem 0;
-    position: relative;
-}
-
-.timeline-icon {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    background: white;
-    border: 2px solid #e0e0e0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    z-index: 1;
-    font-size: 1rem;
-}
-
-.timeline-item.timeline-analysis_failed .timeline-icon {
-    border-color: #dc3545;
-    background: #fff5f5;
-}
-
-.timeline-item.timeline-analysis_completed .timeline-icon {
-    border-color: #28a745;
-    background: #f0fff4;
-}
-
-.timeline-item.timeline-retry_requested .timeline-icon {
-    border-color: #ffc107;
-    background: #fffbf0;
-}
-
-.timeline-content {
-    flex: 1;
-    padding-top: 0.25rem;
-}
-
-.timeline-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
-}
-
-.timeline-header time {
-    font-size: 0.85rem;
-    color: #999;
-}
-
-.timeline-message {
-    margin: 0.25rem 0;
-    color: #333;
-}
-
-.timeline-actor {
-    font-size: 0.85rem;
-    color: #666;
-    margin: 0.25rem 0 0;
-}
-
-.attempts-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-}
-
-.attempts-table th,
-.attempts-table td {
-    padding: 0.5rem;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-    font-size: 0.9rem;
-    vertical-align: top;
-}
-
-.attempts-table th {
-    background: #f8f8f8;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    color: #666;
-}
-
-.attempts-table pre {
-    background: #f5f5f5;
-    padding: 0.5rem;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    overflow-x: auto;
-    margin: 0.5rem 0 0;
-}
-
-.muted {
-    color: #999;
-}
-.kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 1rem;
-    margin-bottom: 3rem;
-}
-
-.kpi-card {
-    background: #f8f8f8;
-    padding: 1.5rem 1rem;
-    border-radius: 8px;
-    text-align: center;
-    border-left: 4px solid #ccc;
-}
-
-.kpi-card.kpi-warning { border-left-color: #ffc107; }
-.kpi-card.kpi-danger  { border-left-color: #dc3545; }
-.kpi-card.kpi-success { border-left-color: #28a745; }
-
-.kpi-value {
-    display: block;
-    font-size: 2rem;
-    font-weight: bold;
-    color: #1a1a1a;
-    line-height: 1;
-}
-
-.kpi-label {
-    display: block;
-    font-size: 0.85rem;
-    color: #666;
-    margin-top: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.filters {
-    display: flex;
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-}
-
-.filters select {
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: white;
-}
-
-.btn-secondary {
-    padding: 0.5rem 1rem;
-    background: #f0f0f0;
-    color: #333;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.btn-warning {
-    padding: 0.5rem 1rem;
-    background: #ffc107;
-    color: #000;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-    margin-left: 0.5rem;
-}
-
-.inline-form {
-    display: inline-block;
-    margin-left: 0.5rem;
-}
-
-.admin-notice {
-    background: #e7f3ff;
-    border-left: 4px solid #0066cc;
-    padding: 1rem;
-    border-radius: 4px;
-    margin-bottom: 2rem;
-}
-/* ---------- Layout général ---------- */
+/* ---------- 1. Variables ---------- */
 :root {
     --color-bg: #ffffff;
     --color-text: #1a1a1a;
@@ -425,18 +12,24 @@ upload-zone {
     --color-danger: #dc3545;
     --color-success: #28a745;
     --color-warning: #ffc107;
+
     --radius: 8px;
+    --radius-sm: 4px;
     --space: 1rem;
+
+    --font-stack: system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
+/* ---------- 2. Reset ---------- */
 * {
     box-sizing: border-box;
 }
 
+/* ---------- 3. Layout global ---------- */
 body {
     margin: 0;
     padding: 0;
-    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-family: var(--font-stack);
     color: var(--color-text);
     background: var(--color-bg);
     line-height: 1.5;
@@ -478,7 +71,7 @@ header a:hover {
     opacity: 0.85;
 }
 
-/* ---------- Titres ---------- */
+/* ---------- 4. Typographie ---------- */
 h1 {
     font-size: 1.75rem;
     margin: 0 0 1.5rem;
@@ -490,7 +83,7 @@ h2 {
     color: var(--color-text);
 }
 
-/* ---------- Boutons ---------- */
+/* ---------- 5. Boutons ---------- */
 .btn-primary,
 .btn-secondary,
 .btn-warning {
@@ -504,20 +97,9 @@ h2 {
     transition: opacity 0.15s;
 }
 
-.btn-primary {
-    background: var(--color-primary);
-    color: white;
-}
-
-.btn-secondary {
-    background: #f0f0f0;
-    color: var(--color-text);
-}
-
-.btn-warning {
-    background: var(--color-warning);
-    color: #000;
-}
+.btn-primary { background: var(--color-primary); color: white; }
+.btn-secondary { background: #f0f0f0; color: var(--color-text); }
+.btn-warning { background: var(--color-warning); color: #000; }
 
 .btn-primary:hover,
 .btn-secondary:hover,
@@ -525,7 +107,190 @@ h2 {
     opacity: 0.85;
 }
 
-/* ---------- Tableaux responsive ---------- */
+/* ---------- 6. Alertes ---------- */
+.alert {
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1rem;
+}
+
+.alert-success { background: #d4edda; color: #155724; }
+.alert-danger  { background: #f8d7da; color: #721c24; }
+.alert-info    { background: #d1ecf1; color: #0c5460; }
+
+/* ---------- 7. Formulaires ---------- */
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.form-field label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.form-field input,
+.form-field select {
+    padding: 0.55rem 0.75rem;
+    border: 1px solid #d0d0d0;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background: white;
+    font-family: inherit;
+    transition: border-color 0.15s;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.08);
+}
+
+.form-field input[type="number"] {
+    max-width: 120px;
+}
+
+.form-field ul {
+    list-style: none;
+    margin: 0.25rem 0 0;
+    padding: 0;
+    font-size: 0.85rem;
+    color: #a00;
+}
+
+/* ---------- 8. Page login ---------- */
+.login-container {
+    max-width: 400px;
+    margin: 4rem auto;
+    padding: 2rem;
+    background: #f8f8f8;
+    border-radius: var(--radius);
+}
+
+.login-container h1 {
+    margin-top: 0;
+    font-size: 1.5rem;
+}
+
+.login-container label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: 600;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    border: 1px solid #ccc;
+    border-radius: var(--radius-sm);
+}
+
+.login-container button {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+/* ---------- 9. Page upload ---------- */
+.upload-zone {
+    border: 2px dashed #ccc;
+    border-radius: var(--radius);
+    padding: 3rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #fafafa;
+}
+
+.upload-zone:hover,
+.upload-zone.is-dragover {
+    border-color: var(--color-primary);
+    background: #f0f0f0;
+}
+
+.upload-hint {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+}
+
+.upload-formats {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    margin: 0;
+}
+
+.upload-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.upload-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+.upload-counter {
+    color: var(--color-muted);
+    font-size: 0.9rem;
+}
+
+.file-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: #f5f5f5;
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.5rem;
+    gap: 1rem;
+}
+
+.file-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-size {
+    color: var(--color-muted);
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.file-remove {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #a00;
+    font-size: 1.2rem;
+    padding: 0 0.5rem;
+}
+
+.file-remove:hover {
+    background: rgba(170, 0, 0, 0.1);
+    border-radius: var(--radius-sm);
+}
+
+/* ---------- 10. Tableaux ---------- */
 .document-table,
 .attempts-table {
     width: 100%;
@@ -542,6 +307,8 @@ h2 {
     padding: 0.75rem 1rem;
     text-align: left;
     border-bottom: 1px solid var(--color-border);
+    font-size: 0.9rem;
+    vertical-align: top;
 }
 
 .document-table th,
@@ -553,7 +320,319 @@ h2 {
     color: var(--color-muted);
 }
 
-/* ---------- Responsive ---------- */
+.attempts-table pre {
+    background: #f5f5f5;
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    overflow-x: auto;
+    margin: 0.5rem 0 0;
+}
+
+/* ---------- 11. Badges ---------- */
+.badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.badge-gray   { background: #e0e0e0; color: #333; }
+.badge-blue   { background: #cfe2ff; color: #084298; }
+.badge-orange { background: #ffe5cc; color: #8a4a00; }
+.badge-green  { background: #d1e7dd; color: #0f5132; }
+.badge-red    { background: #f8d7da; color: #842029; }
+
+/* ---------- 12. Timeline ---------- */
+.timeline {
+    list-style: none;
+    padding: 0;
+    position: relative;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 1rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e0e0e0;
+}
+
+.timeline-item {
+    display: flex;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    position: relative;
+}
+
+.timeline-icon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    z-index: 1;
+    font-size: 1rem;
+}
+
+.timeline-item.timeline-analysis_failed .timeline-icon {
+    border-color: var(--color-danger);
+    background: #fff5f5;
+}
+
+.timeline-item.timeline-analysis_completed .timeline-icon {
+    border-color: var(--color-success);
+    background: #f0fff4;
+}
+
+.timeline-item.timeline-retry_requested .timeline-icon {
+    border-color: var(--color-warning);
+    background: #fffbf0;
+}
+
+.timeline-content {
+    flex: 1;
+    padding-top: 0.25rem;
+}
+
+.timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+}
+
+.timeline-header time {
+    font-size: 0.85rem;
+    color: #999;
+}
+
+.timeline-message {
+    margin: 0.25rem 0;
+    color: #333;
+}
+
+.timeline-actor {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    margin: 0.25rem 0 0;
+}
+
+/* ---------- 13. Page header ---------- */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.page-header h1 {
+    margin: 0;
+}
+
+/* ---------- 14. Empty state ---------- */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #fafafa;
+    border-radius: var(--radius);
+}
+
+.empty-state h1 {
+    margin-top: 0;
+}
+
+.total-info {
+    color: var(--color-muted);
+    font-size: 0.9rem;
+}
+
+/* ---------- 15. KPIs (admin) ---------- */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+
+.kpi-card {
+    background: #f8f8f8;
+    padding: 1.5rem 1rem;
+    border-radius: var(--radius);
+    text-align: center;
+    border-left: 4px solid #ccc;
+}
+
+.kpi-card.kpi-warning { border-left-color: var(--color-warning); }
+.kpi-card.kpi-danger  { border-left-color: var(--color-danger); }
+.kpi-card.kpi-success { border-left-color: var(--color-success); }
+
+.kpi-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--color-text);
+    line-height: 1;
+}
+
+.kpi-label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ---------- 16. Filtres ---------- */
+.filters {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.filters select,
+.filters input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: var(--radius-sm);
+    background: white;
+    font-family: inherit;
+}
+
+/* ---------- 17. Document détail ---------- */
+.document-detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+.document-detail > section {
+    min-width: 0;
+}
+
+.document-timeline,
+.document-attempts {
+    grid-column: 1 / -1;
+}
+
+.document-info dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem 1rem;
+    margin: 1rem 0 2rem;
+}
+
+.document-info dt {
+    font-weight: 600;
+    color: var(--color-muted);
+}
+
+.document-info dd {
+    margin: 0;
+}
+
+/* ---------- 18. Formulaire métadonnées ---------- */
+.document-metadata-edit {
+    background: #f8f8f8;
+    padding: 1.5rem;
+    border-radius: var(--radius);
+}
+
+.document-metadata-edit h2 {
+    margin-top: 0;
+    font-size: 1.15rem;
+}
+
+.metadata-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.metadata-fields {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.metadata-form .btn-primary {
+    align-self: flex-start;
+}
+/* ---------- Document cards (uniformisation) ---------- */
+.document-card {
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+}
+
+.document-card h2 {
+    margin: 0 0 1.25rem;
+    font-size: 1.15rem;
+    color: var(--color-text);
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+}
+.document-info dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.65rem 1rem;
+    margin: 0 0 1.5rem;   /* ← margin-top : 0, car la carte a déjà du padding */
+}
+
+.document-info dt {
+    font-weight: 600;
+    color: var(--color-muted);
+    font-size: 0.9rem;
+}
+
+.document-info dd {
+    margin: 0;
+    font-size: 0.95rem;
+}
+.document-info .btn-primary {
+    margin-top: 0.5rem;
+}
+
+/* ---------- 19. Notices admin ---------- */
+.admin-notice {
+    background: #e7f3ff;
+    border-left: 4px solid #0066cc;
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 2rem;
+}
+
+/* ---------- 20. Utilitaires ---------- */
+.muted {
+    color: #999;
+}
+
+.inline-form {
+    display: inline-block;
+    margin-left: 0.5rem;
+}
+
+/* ---------- 21. Responsive ---------- */
+@media (max-width: 900px) {
+    .document-detail {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
 @media (max-width: 768px) {
     main {
         padding: 1rem 0.75rem;
@@ -571,11 +650,6 @@ h2 {
         display: none;
     }
 
-    .document-detail {
-        grid-template-columns: 1fr !important;
-        gap: 1.5rem;
-    }
-
     .kpi-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -585,6 +659,7 @@ h2 {
     }
 
     .filters select,
+    .filters input,
     .filters button,
     .filters a {
         width: 100%;

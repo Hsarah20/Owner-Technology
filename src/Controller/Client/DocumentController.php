@@ -11,6 +11,10 @@ use App\Entity\Document;
 use App\Security\Voter\DocumentVoter;
 use App\Service\Storage\DocumentStorage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Form\DocumentMetadataType;
+use App\Messenger\Command\CommandBus;
+use App\UseCase\Document\UpdateMetadata\UpdateDocumentMetadataCommand;
+use App\Enum\DocumentNature;
 
 #[Route('/app/documents', name: 'app_client_document_')]
 class DocumentController extends AbstractController
@@ -36,8 +40,12 @@ class DocumentController extends AbstractController
         // Le Voter garantit qu'un client ne peut voir que ses documents
         $this->denyAccessUnlessGranted(DocumentVoter::VIEW, $document);
 
+        $metadataForm = $this->createForm(DocumentMetadataType::class, $document);
+
         return $this->render('client/document/show.html.twig', [
             'document' => $document,
+            'natures' => DocumentNature::cases(),
+            'metadataForm' => $metadataForm->createView(),
         ]);
     }
 
@@ -67,5 +75,38 @@ class DocumentController extends AbstractController
         $response->headers->set('Content-Length', (string) $document->getSize());
 
         return $response;
+    }
+
+    #[Route('/{id}/metadata', name: 'update_metadata', methods: ['POST'], requirements: ['id' => '\d+'])]
+    public function updateMetadata(
+        Document $document,
+        Request $request,
+        CommandBus $commandBus,
+    ): Response {
+     
+        $this->denyAccessUnlessGranted(DocumentVoter::EDIT, $document);
+        
+        $form = $this->createForm(DocumentMetadataType::class, $document);
+        $form->handleRequest($request);
+       
+        if ($form->isSubmitted() && $form->isValid()) {   
+            $commandBus->dispatch(new UpdateDocumentMetadataCommand(
+                documentId: $document->getId(),
+                nature: $document->getNature(),
+                periodYear: $document->getPeriodYear(),
+                periodMonth: $document->getPeriodMonth(),
+            ));
+
+            $this->addFlash('success', 'Métadonnées mises à jour.');
+
+            return $this->redirectToRoute('app_client_document_show', [
+                'id' => $document->getId(),
+                
+                ]);
+        }        
+        $this->addFlash('error', 'Données invalides.');
+        return $this->redirectToRoute('app_client_document_show', [
+            'id' => $document->getId(),
+        ]);
     }
 }

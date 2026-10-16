@@ -9,7 +9,7 @@
 </div>
 
 <div class="document-detail">
-    <section class="document-info">
+    <section class="document-info document-card">
         <h2>Informations</h2>
         <dl>
             <dt>Nature</dt>
@@ -39,6 +39,37 @@
         </a>
     </section>
 
+    <section class="document-metadata-edit document-card">
+        <h2>Classer ce document</h2>
+
+        {{ form_start(metadataForm, {
+            action: path('app_client_document_update_metadata', {id: document.id}),
+            method: 'POST',
+            attr: {class: 'metadata-form', 'data-turbo': 'false'}
+        }) }}
+            <div class="metadata-fields">
+                <div class="form-field">
+                    {{ form_label(metadataForm.nature) }}
+                    {{ form_widget(metadataForm.nature) }}
+                    {{ form_errors(metadataForm.nature) }}
+                </div>
+
+                <div class="form-field">
+                    {{ form_label(metadataForm.periodYear) }}
+                    {{ form_widget(metadataForm.periodYear) }}
+                    {{ form_errors(metadataForm.periodYear) }}
+                </div>
+
+                <div class="form-field">
+                    {{ form_label(metadataForm.periodMonth) }}
+                    {{ form_widget(metadataForm.periodMonth) }}
+                    {{ form_errors(metadataForm.periodMonth) }}
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary">Enregistrer</button>
+        {{ form_end(metadataForm) }}
+    </section>
     <section class="document-timeline">
         <h2>Historique</h2>
         {% include 'client/document/_timeline.html.twig' with {document: document} %}

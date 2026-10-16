@@ -12,6 +12,7 @@ class DocumentVoter extends Voter
     public const VIEW = 'DOCUMENT_VIEW';
     public const DOWNLOAD = 'DOCUMENT_DOWNLOAD';
     public const RETRY = 'DOCUMENT_RETRY';
+    public const EDIT = 'DOCUMENT_EDIT';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
@@ -19,7 +20,7 @@ class DocumentVoter extends Voter
             return false;
         }
 
-        return in_array($attribute, [self::VIEW, self::DOWNLOAD, self::RETRY], true);
+        return in_array($attribute, [self::VIEW, self::DOWNLOAD, self::RETRY, self::EDIT], true);
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -46,6 +47,11 @@ class DocumentVoter extends Voter
 
         if ($document->getClient() !== $client) {
             return false;
+        }
+
+        // Seul le client propriétaire peut éditer ses métadonnées
+        if ($attribute === self::EDIT) {
+            return true;
         }
 
         // Seul un admin peut relancer une analyse
