@@ -23,14 +23,35 @@ class DocumentController extends AbstractController
     public function list(Request $request, DocumentRepository $repo): Response
     {
         $client = $this->getUser()->getClient();
+
         $page = max(1, (int) $request->query->get('page', 1));
         $limit = max(5, min(100, (int) $request->query->get('limit', 20)));
 
-        $pagination = $repo->paginateForClient($client, $page,$limit);
+        //Filtres
+        $year = $request->query->get('year') ? (int) $request->query->get('year') : null;
+        $month = $request->query->get('month') ? (int) $request->query->get('month') : null;
+        $nature = $request->query->get('nature')
+            ? DocumentNature::tryFrom($request->query->get('nature'))
+            : null;
+
+        $pagination = $repo->paginateForClient($client, $page,$limit,$year, $month, $nature);
+
+        // Conserver les filtres dans les liens de pagination
+        $pagination->setCustomParameters(array_filter([
+            'limit' => $limit,
+            'year' => $year,
+            'month' => $month,
+            'nature' => $nature?->value,
+        ]));
 
         return $this->render('client/document/list.html.twig', [
             'pagination' => $pagination,
             'limit' => $limit,
+            'currentYear' => $year,
+            'currentMonth' => $month,
+            'currentNature' => $nature,
+            'natures' => DocumentNature::cases(),
+            'availableYears' => $repo->findAvailableYears($client),
         ]);
     }
 

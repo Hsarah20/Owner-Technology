@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Client;
 use App\Entity\Document;
 use App\Enum\DocumentStatus;
+use App\Enum\DocumentNature;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -22,12 +23,33 @@ class DocumentRepository extends ServiceEntityRepository
         parent::__construct($registry, Document::class);
     }
 
-    public function paginateForClient(Client $client, int $page = 1, int $limit = 10): PaginationInterface
+    public function paginateForClient(
+        Client $client, 
+        int $page = 1, 
+        int $limit = 10,
+        ?int $year = null,
+        ?int $month = null,
+        ?DocumentNature $nature = null,
+        ): PaginationInterface
     {
         $qb = $this->createQueryBuilder('d')
             ->andWhere('d.client = :client')
             ->setParameter('client', $client)
             ->orderBy('d.createdAt', 'DESC');
+        
+        if ($year !== null) {
+            $qb->andWhere('d.periodYear = :year')->setParameter('year', $year);
+        }
+
+        if ($month !== null) {
+            $qb->andWhere('d.periodMonth = :month')->setParameter('month', $month);
+        }
+
+        if ($nature !== null) {
+            $qb->andWhere('d.nature = :nature')
+            ->setParameter('nature', $nature);
+        }
+
 
         return $this->paginator->paginate($qb, $page, $limit);
     }
@@ -81,5 +103,17 @@ class DocumentRepository extends ServiceEntityRepository
             ->setParameter('status', $status)
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function findAvailableYears(Client $client): array
+    {
+        return $this->createQueryBuilder('d')
+            ->select('DISTINCT d.periodYear AS year')
+            ->andWhere('d.client = :client')
+            ->andWhere('d.periodYear IS NOT NULL')
+            ->setParameter('client', $client)
+            ->orderBy('year', 'DESC')
+            ->getQuery()
+            ->getSingleColumnResult();
     }
 }
