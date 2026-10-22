@@ -39,8 +39,43 @@
 
 ## Vérifications
 
-- Tests manuels à chaque étape : upload, analyse async, timeline, relance
-- Cloisonnement : accès URL directe entre deux clients → 403 attendu
-- Persistance : documents et timelines consultables après `docker compose restart`
-- Volumétrie : fixtures de 120 documents pour valider la pagination
+### Tests automatisés (PHPUnit 12)
+
+12 tests couvrent la logique critique. `make test` valide tout en 1 seconde.
+
+**Tests unitaires (7) — `DocumentVoterTest` :**
+
+| Cas testé | Résultat |
+|---|---|
+| Admin voit tous les documents | ✅ Autorisé |
+| Client voit son propre document | ✅ Autorisé |
+| Client étranger → document d'un autre | ❌ Refusé |
+| Client sans dossier | ❌ Refusé |
+| Client veut relancer une analyse (RETRY) | ❌ Refusé |
+| Client édite son document (EDIT) | ✅ Autorisé |
+| Anonyme | ❌ Refusé |
+
+**Tests fonctionnels (5) — `DocumentAccessTest` :**
+
+| Cas testé | Résultat |
+|---|---|
+| Client B → accès doc client A (HTTP) | 403 attendu |
+| Client A → accès propre doc (HTTP) | 200 attendu |
+| Client B → téléchargement doc client A | 403 attendu |
+| Admin → accès page admin | 200 attendu |
+| Anonyme → redirection login | 302 attendu |
+
+Base de test isolée (`owner_test`) avec rollback automatique via Dama Doctrine Test Bundle. Aucune pollution de la base de dev.
+
+### Tests manuels (en complément)
+
+Les tests automatisés couvrent la logique, mais certains scénarios restent vérifiés manuellement :
+
+- **Upload** : dépôt de 1 à N fichiers, formats PDF/JPG/PNG/DOCX/XLSX, limites 25 Mo
+- **Analyse asynchrone** : dispatch → queue → worker → timeline mise à jour
+- **Persistance** : documents et timelines consultables après `docker compose restart`
+- **Volumétrie** : fixtures de 120 documents pour valider la pagination
+- **Cloisonnement (manuel)** : navigation dans deux navigateurs (ACME + BETA) pour confirmer visuellement les 403
+- **Relance admin** : clic sur "Relancer l'analyse" → nouvelle tentative en base
+- **Édition nature/période** : modification via formulaire → vérification en base
 

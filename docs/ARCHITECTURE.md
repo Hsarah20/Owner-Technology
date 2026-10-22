@@ -198,10 +198,10 @@ Le cahier des charges mentionne ~50 documents/mois/client, soit 600/an et 3 000 
 - Tri par date de dépôt DESC
 - Limite configurable via `?limit=`
 
-**Limite connue** : le client ne peut pas filtrer par période (mois/année) ni par nature.
+**Limite connue** : le client peut  filtrer par période (mois/année) et par nature.
 Avec 3 000 documents, la navigation devient pénible.
 
-**Prochaine priorité** : filtre année + mois + nature côté client, en réutilisant
-le pattern déjà implémenté côté admin (`DocumentRepository::paginateForAdmin`).
-Le repository exposerait `findAvailableYears()` pour ne proposer que les années
+filtre année + mois + nature côté client, en réutilisant
+- côté admin (`DocumentRepository::paginateForAdmin`).
+- Le repository exposerait `findAvailableYears()` pour ne proposer que les années
 réellement présentes dans le dossier du client.

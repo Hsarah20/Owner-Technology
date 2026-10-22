@@ -27,12 +27,26 @@ L'application est prête sur **https://localhost:8443**.
 ## Comptes de test
 
 | Rôle        | Email                  | Mot de passe |
-|-----------  |--- --------------      |--- ----------|
+|-------------|------------------------|--- ----------|
 | Admin OWNER | `admin@owner.fr`       | `admin1234`  |
 | Client ACME | `client-acme@owner.fr` | `client1234` |
 | Client BETA | `client-beta@owner.fr` | `client1234` |
 
 ---
+
+## Tests (PHPUnit)
+
+Le projet dispose de **12 tests automatisés** couvrant la logique métier critique et le cloisonnement des données.
+
+### Lancer les tests
+
+```bash
+make test            # tous les tests
+make test-unit       # tests unitaires uniquement
+make test-functional # tests fonctionnels uniquement
+```
+
+----
 
 ## Stack
 
