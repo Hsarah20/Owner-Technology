@@ -223,3 +223,18 @@ demo-full: ## Démo complète : reset + seed + analyse + logs
 	@echo "→ Puis lance : make test-analyze ID=<id>"
 	@echo ""
 	@echo "✅ Prêt pour la démo"
+
+test: ## Lance tous les tests
+	$(PHP) ./vendor/bin/phpunit
+
+test-unit: ## Tests unitaires
+	$(PHP) ./vendor/bin/phpunit --testsuite=Unit
+
+test-functional: ## Tests fonctionnels
+	$(PHP) ./vendor/bin/phpunit --testsuite=Functional
+
+test-reset: ## Recrée la base de test
+	$(DB) psql -U owner -d postgres -c "DROP DATABASE IF EXISTS owner_test;"
+	$(DB) psql -U owner -d postgres -c "CREATE DATABASE owner_test;"
+	$(CONSOLE) doctrine:migrations:migrate --no-interaction --env=test
+	@echo "✅ Base de test prête"
